@@ -1,5 +1,6 @@
 package com.example.agenda;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,13 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.agenda.dao.ClienteDAO;
+import com.example.agenda.modelo.Cliente;
+
 public class LoginActivity extends AppCompatActivity {
 
-    EditText editLogin;
-    EditText editSenha;
-    Button btnSalvar;
-    TextView txtNovaSenha;
-    TextView txtCadastrar;
+
+    private EditText edtEmail;
+    private EditText edtSenha;
+    private ClienteDAO dao;
+    private boolean login;
+    private Cliente cliente;
 
 
     @Override
@@ -23,50 +28,98 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        init();
+        edtEmail = findViewById(R.id.txtEmail);
+        edtSenha = findViewById(R.id.txtSenha);
+        cliente = new Cliente();
 
-       String login = editLogin.getText().toString();
-       String senha = editSenha.getText().toString();
-       btnSalvar.setOnClickListener(clickSalvar);
-       txtCadastrar.setOnClickListener(clickCadastrar);
-       txtNovaSenha.setOnClickListener(clickSenha);
+        login = false;
+
+        dao = new ClienteDAO(this);
     }
 
-    private void init() {
-        editLogin = findViewById(R.id.editLogin);
-        editSenha = findViewById(R.id.editSenha);
-        btnSalvar = findViewById(R.id.btnSalvar);
-        txtNovaSenha = findViewById(R.id.txtNovaSenha);
-        txtCadastrar = findViewById(R.id.txtCasdastrar);
+    /**
+     * Chamando a tela para cadastrar novo usuario
+     * */
+    public void chamarTelaCastroUsuario(View view){
+        Intent i = new Intent(LoginActivity.this, CadastroActivity.class);
+        startActivity(i);
+        finish();
     }
-//----------------------------------------------------------------
-    View.OnClickListener clickSalvar = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
 
-            Intent intent = new Intent(LoginActivity.this, AgendaActivity.class);
+    public void clickButtuonEntrar(View view){
+        login();
+    }
 
-            startActivity(intent);
+    private boolean login(){
+        String email = edtEmail.getText().toString().trim();
+        String senha = edtSenha.getText().toString().trim();
+        boolean validateCampos = validaCampos();
+        cliente.setEmail(email);
+        cliente.setSenha(senha);
 
+
+        if (!validateCampos){
+            // Chamar o metodo que verificar se exite um Cliente no Banco de dados
+            login = dao.fazerLogin(cliente);
+
+            if (login){
+
+                Intent i = new Intent(LoginActivity.this, HomeAgenda.class);
+                startActivity(i);
+                finish();
+                return true;
+            }else{
+                Toast.makeText(this, "Usuário não cadastrado", Toast.LENGTH_SHORT).show();
+            }
         }
-    };
- //----------------------------------------------------------------------
+        return false;
+    }
 
- View.OnClickListener clickCadastrar = new View.OnClickListener() {
-     @Override
-     public void onClick(View view) {
-         Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
+    /**
+     * @descricao: Validando os campos
+     * @return boolean
+     * */
+    private boolean validaCampos(){
+        String email = edtEmail.getText().toString();
+        String senha = edtSenha.getText().toString();
+        boolean res = false;
 
-         startActivity(intent);
-     }
- }  ;
-
-//----------------------------------------------------------
-
-    View.OnClickListener clickSenha = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
+        if(res = !isEmailValido(email)){
+            edtEmail.requestFocus();
         }
-    };
-}
+        else
+        if(res = isCampoVazio(senha)){
+            edtSenha.requestFocus();
+        }
+
+        // Se existe algum campo vazio então vai mostrar uma MSG com aviso
+        if(res){
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setTitle("Aviso!");
+            dlg.setMessage("Há campos inválidos ou em branco");
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
+
+        return res;
+    }
+
+    /**
+     * @descricao: Criando as regras de validação
+     * de campos vazios
+     * @return boolean
+     * @param:string
+     * */
+    private boolean isCampoVazio(String valor){
+        boolean resultado = (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
+
+        return resultado;
+    }
+
+    private boolean isEmailValido(String email){
+        boolean resultado = (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+
+        return resultado;
+    }
+
+
