@@ -1,15 +1,16 @@
-package com.example.agenda;
+package com.example.agenda.modelo;
 
 import java.io.Serializable;
 
-public class Cliente  implements Serializable {
+public class Cliente implements Serializable {
 
-    private Integer id;
-    private String nome;
+    private  Integer id;
+    private  String nome;
     private String cpf;
+    private  String endereco;
     private String telefone;
-    private String endereco;
     private String email;
+    private String senha;
 
     public Integer getId() {
         return id;
@@ -35,20 +36,20 @@ public class Cliente  implements Serializable {
         this.cpf = cpf;
     }
 
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
     public String getEndereco() {
         return endereco;
     }
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getEmail() {
@@ -59,8 +60,11 @@ public class Cliente  implements Serializable {
         this.email = email;
     }
 
-    @Override
-    public String toString(){
-        return nome;
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
