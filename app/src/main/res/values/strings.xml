@@ -1,16 +1,5 @@
 <resources>
     <string name="app_name">Agenda</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <array name="local">
-        <item>Salão</item>
-        <item>Residencia</item>
-    </array>
-
-    <array name="Pagamento">
-        <item>Dinheiro</item>
-        <item>Cartão</item>
-    </array>
+    <string name="title_activity_cada_agenda">CadastroAgenda</string>
 </resources>

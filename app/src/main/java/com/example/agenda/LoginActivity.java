@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.agenda.dao.ClienteDAO;
 import com.example.agenda.modelo.Cliente;
@@ -39,18 +42,18 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Chamando a tela para cadastrar novo usuario
-     * */
-    public void chamarTelaCastroUsuario(View view){
+     */
+    public void chamarTelaCastroUsuario(View view) {
         Intent i = new Intent(LoginActivity.this, CadastroActivity.class);
         startActivity(i);
         finish();
     }
 
-    public void clickButtuonEntrar(View view){
+    public void clickButtuonEntrar(View view) {
         login();
     }
 
-    private boolean login(){
+    private boolean login() {
         String email = edtEmail.getText().toString().trim();
         String senha = edtSenha.getText().toString().trim();
         boolean validateCampos = validaCampos();
@@ -58,17 +61,17 @@ public class LoginActivity extends AppCompatActivity {
         cliente.setSenha(senha);
 
 
-        if (!validateCampos){
+        if (!validateCampos) {
             // Chamar o metodo que verificar se exite um Cliente no Banco de dados
             login = dao.fazerLogin(cliente);
 
-            if (login){
+            if (login) {
 
-                Intent i = new Intent(LoginActivity.this, HomeAgenda.class);
+                Intent i = new Intent(LoginActivity.this, HomeAgendaActivity.class);
                 startActivity(i);
                 finish();
                 return true;
-            }else{
+            } else {
                 Toast.makeText(this, "Usuário não cadastrado", Toast.LENGTH_SHORT).show();
             }
         }
@@ -76,24 +79,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * @descricao: Validando os campos
      * @return boolean
-     * */
-    private boolean validaCampos(){
+     * @descricao: Validando os campos
+     */
+    private boolean validaCampos() {
         String email = edtEmail.getText().toString();
         String senha = edtSenha.getText().toString();
         boolean res = false;
 
-        if(res = !isEmailValido(email)){
+        if (res = !isEmailValido(email)) {
             edtEmail.requestFocus();
-        }
-        else
-        if(res = isCampoVazio(senha)){
+        } else if (res = isCampoVazio(senha)) {
             edtSenha.requestFocus();
         }
 
         // Se existe algum campo vazio então vai mostrar uma MSG com aviso
-        if(res){
+        if (res) {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setTitle("Aviso!");
             dlg.setMessage("Há campos inválidos ou em branco");
@@ -105,21 +106,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * @return boolean
      * @descricao: Criando as regras de validação
      * de campos vazios
-     * @return boolean
      * @param:string
-     * */
-    private boolean isCampoVazio(String valor){
+     */
+    private boolean isCampoVazio(String valor) {
         boolean resultado = (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
 
         return resultado;
     }
 
-    private boolean isEmailValido(String email){
+    private boolean isEmailValido(String email) {
         boolean resultado = (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
 
         return resultado;
     }
+}
 
 
