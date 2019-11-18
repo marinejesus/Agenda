@@ -51,7 +51,7 @@ public class AgendaDAO {
             agenda.setNomeSalao(c.getString(c.getColumnIndex("nome_salao")));
             agenda.setHorario(c.getString(c.getColumnIndex("horario")));
             agenda.setDia(c.getString(c.getColumnIndex("dia")));
-            agenda.setObservacoes(c.getString(c.getColumnIndex("observacoes")));
+
 
             agendamentos.add(agenda);
         }

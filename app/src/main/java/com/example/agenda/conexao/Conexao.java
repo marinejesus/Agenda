@@ -29,8 +29,7 @@ public class Conexao extends SQLiteOpenHelper {
         db.execSQL("create table if not exists agenda (id integer primary key autoincrement, " +
                 "nome_salao varchar(100) not null," +
                 " horario varchar(10) not null," +
-                " dia varchar(20) not null ," +
-                "observacoes varchar(200) not null );");
+                " dia varchar(20) not null );");
     }
 
     @Override
@@ -47,8 +46,7 @@ public class Conexao extends SQLiteOpenHelper {
         db.execSQL("create table if not exists agenda (id integer primary key autoincrement, " +
                 "nome_salao varchar(100) not null," +
                 " horario varchar(10) not null," +
-                " dia varchar(20) not null ," +
-                "observacoes varchar(200) not null );");
+                " dia varchar(20) not null );");
     }
 
 

@@ -8,7 +8,7 @@ public class Agenda implements Serializable{
     private String nomeSalao;
     private String horario;
     private String dia;
-    private String observacoes;
+
 
     public Integer getId() {
         return id;
@@ -42,12 +42,6 @@ public class Agenda implements Serializable{
         this.dia = dia;
     }
 
-    public String getObservacoes() {
-        return observacoes;
-    }
 
-    public void setObservacoes(String observacoes) {
-        this.observacoes = observacoes;
-    }
 }
 

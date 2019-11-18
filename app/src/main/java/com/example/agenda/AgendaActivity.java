@@ -24,139 +24,104 @@ import com.example.agenda.modelo.Agenda;
 import java.util.Calendar;
 
 public class AgendaActivity extends AppCompatActivity {
-    public class CadAgenda extends AppCompatActivity {
-        private CalendarView calendarDia;
-        private EditText edtHorario, edtNomeSalao;
-        private String dataFormate;
-        private AgendaDAO dao;
-        private Agenda agenda;
-        private Button btnSalvarAlgo;
+    private CalendarView calendarDia;
+    private EditText edtHorario, edtNomeSalao;
+    private String dataFormate;
+    private AgendaDAO dao;
+    private Agenda agenda;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_agenda);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_agenda);
 
-            calendarDia = findViewById(R.id.cdEscolherDia);
-            edtNomeSalao = findViewById(R.id.txtNomeSalao);
-            edtHorario = findViewById(R.id.txtHotario);
-            btnSalvarAlgo = findViewById(R.id.btnSalvarAgenda);
-            btnSalvarAlgo.setOnClickListener(clickSalvarAgenda);
-            dao = new AgendaDAO(this);
-            agenda = new Agenda();
+        calendarDia = findViewById(R.id.cdEscolherDia);
+        edtNomeSalao = findViewById(R.id.txtNomeSalao);
+        edtHorario = findViewById(R.id.txtHotario);
 
-            calendarDia.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-                @Override
-                public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                    dataFormate = (dayOfMonth) + "/" + month + "/" + year;
-                }
-            });
+        dao = new AgendaDAO(this);
+        agenda = new Agenda();
 
-        }
-
-        View.OnClickListener clickSalvarAgenda = new View.OnClickListener() {
+        calendarDia.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onClick(View view) {
-                String nome = edtNomeSalao.getText().toString().trim();
-                String horario = edtHorario.getText().toString().trim();
-                boolean validateCampos = validaCampos();
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                dataFormate = (dayOfMonth) + "/" + month + "/" + year;
+            }
+        });
 
-                if (!validateCampos) {
-                    agenda.setNomeSalao(nome);
-                    agenda.setHorario(horario);
-                    agenda.setDia(dataFormate);
+    }
 
-                    try {
-                        long validate = dao.inseir(agenda);
+    public void salvarAgenda(View view){
+        String nome = edtNomeSalao.getText().toString().trim();
+        String horario = edtHorario.getText().toString().trim();
+        boolean validateCampos = validaCampos();
 
-                        if (validate >= 1) {
-                           // Toast.makeText(this, "Agendamento salvo com Sucesso!! " + validate, Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(CadAgenda.this, HomeAgendaActivity.class);
-                            startActivity(i);
-                            finish();
-                        } else {
-                           // Toast.makeText(this, "Aceonteceu um erro ao Salvar o Agendamento " + validate, Toast.LENGTH_LONG).show();
+        if(!validateCampos){
+            agenda.setNomeSalao(nome);
+            agenda.setHorario(horario);
+            agenda.setDia(dataFormate);
 
-                        }
+            try {
+                long validate =  dao.inseir(agenda);
 
-                    } catch (Exception e) {
-                        System.out.print(e);
-                       // Toast.makeText(this, "Erro ao Salvar Agendamento " + e, Toast.LENGTH_LONG).show();
-                    }
+                if(validate >= 1){
+                    Toast.makeText(this, "Agendamento salvo com Sucesso!! " + validate , Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(AgendaActivity.this, HomeAgendaActivity.class);
+                    startActivity(i);
+                    finish();
+                }else{
+                    Toast.makeText(this, "Aceonteceu um erro ao Salvar o Agendamento " + validate, Toast.LENGTH_LONG).show();
+
                 }
+
+            }catch (Exception e){
+                System.out.print(e);
+                Toast.makeText(this, "Erro ao Salvar Agendamento " + e , Toast.LENGTH_LONG).show();
             }
-        };
-
-
-        public void salvarAgenda(View view) {
-            String nome = edtNomeSalao.getText().toString().trim();
-            String horario = edtHorario.getText().toString().trim();
-            boolean validateCampos = validaCampos();
-
-            if (!validateCampos) {
-                agenda.setNomeSalao(nome);
-                agenda.setHorario(horario);
-                agenda.setDia(dataFormate);
-
-                try {
-                    long validate = dao.inseir(agenda);
-
-                    if (validate >= 1) {
-                        Toast.makeText(this, "Agendamento salvo com Sucesso!! " + validate, Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(CadAgenda.this, HomeAgendaActivity.class);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        Toast.makeText(this, "Aceonteceu um erro ao Salvar o Agendamento " + validate, Toast.LENGTH_LONG).show();
-
-                    }
-
-                } catch (Exception e) {
-                    System.out.print(e);
-                    Toast.makeText(this, "Erro ao Salvar Agendamento " + e, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-
-        /**
-         * @return boolean
-         * @descricao: Validando os campos
-         */
-        private boolean validaCampos() {
-            String salario = edtNomeSalao.getText().toString();
-            String horario = edtHorario.getText().toString();
-
-            boolean res = false;
-
-            if (res = isCampoVazio(salario)) {
-                edtNomeSalao.requestFocus();
-            } else if (res = isCampoVazio(horario)) {
-                edtHorario.requestFocus();
-            }
-
-
-            // Se existe algum campo vazio então vai mostrar uma MSG com aviso
-            if (res) {
-                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-                dlg.setTitle("Aviso!");
-                dlg.setMessage("Há campos inválidos ou em branco");
-                dlg.setNeutralButton("OK", null);
-                dlg.show();
-            }
-
-            return res;
-        }
-
-        /**
-         * @return boolean
-         * @descricao: Criando as regras de validação
-         * de campos vazios
-         * @param:string
-         */
-        private boolean isCampoVazio(String valor) {
-            boolean resultado = (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
-
-            return resultado;
         }
     }
+
+    /**
+     * @descricao: Validando os campos
+     * @return boolean
+     * */
+    private boolean validaCampos(){
+        String salario = edtNomeSalao.getText().toString();
+        String horario = edtHorario.getText().toString();
+
+        boolean res = false;
+
+        if(res = isCampoVazio(salario)){
+            edtNomeSalao.requestFocus();
+        }
+        else
+        if(res = isCampoVazio(horario)){
+            edtHorario.requestFocus();
+        }
+
+
+        // Se existe algum campo vazio então vai mostrar uma MSG com aviso
+        if(res){
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setTitle("Aviso!");
+            dlg.setMessage("Há campos inválidos ou em branco");
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
+
+        return res;
+    }
+
+    /**
+     * @descricao: Criando as regras de validação
+     * de campos vazios
+     * @return boolean
+     * @param:string
+     * */
+    private boolean isCampoVazio(String valor){
+        boolean resultado = (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
+
+        return resultado;
+    }
+
 }
