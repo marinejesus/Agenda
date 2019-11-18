@@ -32,6 +32,7 @@ public class AgendaDAO {
         values.put("nome_salao", agenda.getNomeSalao());
         values.put("horario", agenda.getHorario());
         values.put("dia", agenda.getDia());
+        values.put("observacoes", "");
 
         return banco.insert("agenda",null, values);
     }
