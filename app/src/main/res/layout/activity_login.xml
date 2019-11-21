@@ -5,32 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/img"
     tools:context=".LoginActivity">
 
-
-    <TextView
-        android:id="@+id/E-mail"
-        android:layout_width="43dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="136dp"
-        android:text="E-mail" />
 
     <EditText
         android:id="@+id/txtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Email"
+        android:layout_marginTop="150dp"
         android:ems="10"
+        android:textSize="30dp"
+        android:background="#FFF"
         android:inputType="textEmailAddress" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Senha" />
 
     <EditText
         android:id="@+id/txtSenha"
+        android:hint="Senha"
+        android:layout_marginTop="12dp"
+        android:textSize="30dp"
+        android:background="#FFF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -39,6 +34,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <Button
